@@ -12,7 +12,7 @@ var RedcaseEnvironments = function($) {
 		var environmentId = $('#execution_environment_id').val();
 		var apiParams = $.extend(
 			{},
-			Redcase.api.environments.index(), {
+			Redcase.methods.environments.actions.index(), {
 				params: {
 					execution_environment_id: environmentId
 				},
@@ -30,14 +30,14 @@ var RedcaseEnvironments = function($) {
 				}
 			}
 		);
-		Redcase.api.apiCall(apiParams);
+		Redcase.apiCall(apiParams);
 	};
 
 	var onButtonDestroyClicked = function(event) {
 		var environment_id = $('#execution_environment_id').val();
 		var apiParams = $.extend(
 			{},
-			Redcase.api.environments.destroy(environment_id), {
+			Redcase.methods.environments.actions.destroy(environment_id), {
 				success: function(data, textStatus, request) {
 					$('#execution_environment_id option:selected').remove();
 					$('#execution_environment_id').change();
@@ -52,7 +52,7 @@ var RedcaseEnvironments = function($) {
 				}
 			}
 		);
-		Redcase.api.apiCall(apiParams);
+		Redcase.apiCall(apiParams);
 		event.preventDefault();
 	};
 
@@ -61,7 +61,7 @@ var RedcaseEnvironments = function($) {
 		var description = $('#execution_environment_description').val();
 		var apiParams = $.extend(
 			{},
-			Redcase.api.environments.create(), {
+			Redcase.methods.environments.actions.create(), {
 				params: {
 					execution_environment: {
 						name: name,
@@ -80,7 +80,7 @@ var RedcaseEnvironments = function($) {
 				}
 			}
 		);
-		Redcase.api.apiCall(apiParams);
+		Redcase.apiCall(apiParams);
 		event.preventDefault();
 	};
 
@@ -90,7 +90,7 @@ var RedcaseEnvironments = function($) {
 		var description = $('#execution_environment_description').val()
 		var apiParams = $.extend(
 			{},
-			Redcase.api.environments.update(environmentId), {
+			Redcase.methods.environments.actions.update(environmentId), {
 				params: {
 					execution_environment: {
 						name: name,
@@ -106,7 +106,7 @@ var RedcaseEnvironments = function($) {
 				}
 			}
 		);
-		Redcase.api.apiCall(apiParams);
+		Redcase.apiCall(apiParams);
 		event.preventDefault();
 	};
 
@@ -117,12 +117,9 @@ var RedcaseEnvironments = function($) {
 }
 
 jQuery2(function($) {
-	if (typeof(Redcase) === 'undefined') {
-		Redcase = {};
-	}
-	if (Redcase.environments) {
+	if (Redcase.Environments) {
 		return;
 	}
-	Redcase.environments = new RedcaseEnvironments($);
+	Redcase.Environments = new RedcaseEnvironments($);
 });
 

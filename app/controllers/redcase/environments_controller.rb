@@ -3,7 +3,7 @@ class Redcase::EnvironmentsController < ApplicationController
 
 	unloadable
 	helper RedcaseHelper
-	before_filter :find_project, :authorize
+	before_action :find_project, :authorize
 
 	def index
 		environment = ExecutionEnvironment.find(
@@ -16,6 +16,7 @@ class Redcase::EnvironmentsController < ApplicationController
 	end
 
 	def create
+		params.permit!
 		environment = ExecutionEnvironment.new(params[:execution_environment])
 		environment.project_id = @project.id
 		environment.save
@@ -23,8 +24,9 @@ class Redcase::EnvironmentsController < ApplicationController
 	end
 
 	def update
+		params.permit!
 		environment = ExecutionEnvironment.find(params[:id])
-		environment.update_attributes params[:execution_environment]
+		environment.update(params[:execution_environment])
 		if params[:execution_environment][:project_id]
 			environment.project_id = params[:execution_environment][:project_id]
 		end
@@ -34,6 +36,7 @@ class Redcase::EnvironmentsController < ApplicationController
 	end
 
 	def destroy
+		params.permit!
 		environment = ExecutionEnvironment.find(params[:id])
 		environment.destroy
 		# TODO: Properly handle the case when this fails.

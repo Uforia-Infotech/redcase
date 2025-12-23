@@ -2,7 +2,7 @@
 class Redcase::TestcasesController < ApplicationController
 
 	unloadable
-	before_filter :find_project, :authorize
+	before_action :find_project, :authorize
 
 	def index
 		# TODO: What if there is none?
@@ -66,12 +66,9 @@ class Redcase::TestcasesController < ApplicationController
 	end
 
 	def execute(test_case)
-		version = Version.find_by_name_and_project_id(
-			params[:version],
-			@project.id
-		)
+		version = Version.find_by(name: params[:version], project_id: @project.id)
 		comment = params[:comment].blank? ? nil : params[:comment]
-		result = ExecutionResult.find_by_name(params[:result])
+		result = ExecutionResult.find_by(name: params[:result])
 		environment = ExecutionEnvironment.find(params[:envs])
 		ExecutionJournal.create(
 			version: version,
@@ -82,8 +79,8 @@ class Redcase::TestcasesController < ApplicationController
 			environment: environment
 		)
 		render :json => ExecutionJournal
-			.order('created_on desc')
 			.where({ test_case_id: test_case.id })
+			.order(created_on: :desc)
 			.collect { |ej| ej.to_json }
 	end
 

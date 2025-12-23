@@ -1,13 +1,13 @@
 #!/usr/bin/env ruby
 
 require 'stringio'
-require 'rtf/font'
-require 'rtf/colour'
-require 'rtf/style'
-require 'rtf/information'
-require 'rtf/paper'
-require 'rtf/node'
-require 'rtf/list'
+require_relative 'rtf/font'
+require_relative 'rtf/colour'
+require_relative 'rtf/style'
+require_relative 'rtf/information'
+require_relative 'rtf/paper'
+require_relative 'rtf/node'
+require_relative 'rtf/list'
 
 # This module encapsulates all the classes and definitions relating to the RTF
 # library.
@@ -33,4 +33,5 @@ module RTF
          raise RTFError.new(message)
       end
    end # End of the RTFError class.
+  ::Rtf = RTF unless defined?(::Rtf)
 end # End of the RTF module.

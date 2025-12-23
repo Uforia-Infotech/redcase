@@ -1,4 +1,6 @@
 
+require_relative '../../lib/rtf'
+
 class Rtf_Exporter
 
 	unloadable
@@ -43,8 +45,8 @@ class Rtf_Exporter
 			p.apply(@@cStyles['HEADER']) do |s|
 				s << project_name
 				if suite_id >= 0
-					s << " - #{ExecutionSuite.find_by_id(suite_id).name}"
-				end
+						 s << " - #{ExecutionSuite.find_by(id: suite_id).name}"
+					end
 			end
 		end
 	end
@@ -115,3 +117,7 @@ class Rtf_Exporter
 
 end
 
+
+# Zeitwerk (Rails 6+) expects this file to define RtfExporter.
+# Keep backward compatibility by aliasing the original class name.
+RtfExporter = Rtf_Exporter unless defined?(RtfExporter)

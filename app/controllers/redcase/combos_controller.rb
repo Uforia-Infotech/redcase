@@ -7,7 +7,7 @@ class Redcase::CombosController < ApplicationController
 
 	unloadable
 	helper RedcaseHelper
-	before_filter :find_project, :authorize
+	before_action :find_project, :authorize
 
 	def index
 		@environment =
@@ -20,11 +20,11 @@ class Redcase::CombosController < ApplicationController
 			if params[:version_id]
 				Version.find(params[:version_id])
 			else
-				Version.order('created_on desc').find_by_project_id(@project.id)
+				Version.where(project_id: @project.id).order(created_on: :desc).first
 			end
 		@root_execution_suite =
 			if params[:suite_id]
-				ExecutionSuite.find_by_id(params[:suite_id])
+				ExecutionSuite.find_by(id: params[:suite_id])
 			else
 				ExecutionSuite.get_root_for_project(@project)
 			end

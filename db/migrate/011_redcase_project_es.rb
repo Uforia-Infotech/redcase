@@ -1,5 +1,5 @@
 
-class RedcaseProjectEs < ActiveRecord::Migration
+class RedcaseProjectEs < Rails.version < '5.1' ? ActiveRecord::Migration : ActiveRecord::Migration[4.2]
 
   def self.up
     add_column :execution_suites, :project_id, :integer

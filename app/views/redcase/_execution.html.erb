@@ -39,9 +39,9 @@
 					select_tag(
 						'results',
 						options_for_select(
-							ExecutionResult
-								.order('order_number asc')
-								.collect { |res| res.name }
+ 						ExecutionResult
+ 							.order(order_number: :asc)
+ 							.collect { |res| res.name }
 						)
 					)
 				%>
@@ -49,10 +49,9 @@
 				<%=
 					submit_tag(
 						l(:label_button_save),
-						:onclick => 'Redcase.executionTree.execute()'
+						:onclick => 'Redcase.ExecutionTree.execute()'
 					)
 				%>
-				<br/>
 			</div>
 		</td>
 	</tr>

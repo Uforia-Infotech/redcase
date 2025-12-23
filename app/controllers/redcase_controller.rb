@@ -3,7 +3,7 @@ class RedcaseController < ApplicationController
 
 	unloadable
 	helper RedcaseHelper
-	before_filter :find_project, :authorize
+	before_action :find_project, :authorize
 
 	def index
 		# TODO: Consider extending Project class instead to request a root
@@ -15,8 +15,9 @@ class RedcaseController < ApplicationController
 		#       extended to provide a move convenient method.
 		#       -- Example: @project.last_version
 		@version = Version
-			.order('created_on desc')
-			.find_by_project_id(@project.id)
+			.where(project_id: @project.id)
+			.order(created_on: :desc)
+			.first
 		# TODO: Request a default environment from a project.
 		#       -- Example: @project.default_environment
 		@environment = ExecutionEnvironment.get_default_for_project(@project)

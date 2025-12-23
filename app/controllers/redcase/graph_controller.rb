@@ -2,10 +2,10 @@
 class Redcase::GraphController < ApplicationController
 
 	unloadable
-	before_filter :find_project, :authorize
+	before_action :find_project, :authorize
 
 	def show
-		environment = ExecutionEnvironment.find_by_id(params[:environment_id])
+		environment = ExecutionEnvironment.find_by(id: params[:environment_id])
 		# TODO: This is not supposed to happen in general, only if this
 		#       controller method was called at the wrong time. Unfortunately,
 		#       it takes place currently, so below is a workaround to not throw
@@ -17,7 +17,7 @@ class Redcase::GraphController < ApplicationController
 			return
 		end
 		version = Version.find(params[:version_id])
-		root_execution_suite = ExecutionSuite.find_by_id(params[:suite_id])
+		root_execution_suite = ExecutionSuite.find_by(id: params[:suite_id])
 		graph_data = TestGraph.get_data(
 			version.id,
 			environment.id,

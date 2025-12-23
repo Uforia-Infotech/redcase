@@ -8,10 +8,10 @@ class ExecutionSuite < ActiveRecord::Base
 		:join_table => 'execution_suite_test_case'
 	)
 	belongs_to :project
-	attr_protected :id
+	# attr_protected :id
 
 	def self.get_root_for_project(project)
-		execution_suite = ExecutionSuite.find_by_project_id(project.id)
+		execution_suite = ExecutionSuite.find_by(project_id: project.id)
 		if execution_suite.nil?
 			execution_suite = ExecutionSuite.create(
 				:name => 'Root',
@@ -32,22 +32,19 @@ class ExecutionSuite < ActiveRecord::Base
 					tc.in_suite?(suite_id, project_id)
 				}
 			end
-			test_cases.inject([]) { |journals, tc|
+				test_cases.inject([]) { |journals, tc|
 				journals << ExecutionJournal
-					.order('created_on desc')
-					.find_by_test_case_id_and_environment_id_and_version_id(
-						tc.id,
-						environment.id,
-						version.id
-					)
+					.where(test_case_id: tc.id, environment_id: environment.id, version_id: version.id)
+					.order(created_on: :desc)
+					.first
 				journals
 			}.compact
 		else
 			[]
 		end
 	end
-	
-	# Lifted from: 
+
+	# Lifted from:
 	# https://github.com/amerine/acts_as_tree/blob/dfe7e17bcf711686f4a7d8c772a00c9f3b2fec29/lib/acts_as_tree.rb
 	# Traverse the tree and call a block with the current node and current
     # depth-level.
@@ -85,7 +82,7 @@ class ExecutionSuite < ActiveRecord::Base
 			end
 		end
 	end
-		  
+
 	def is_test_case_id_unique?(id)
 		result = true
 		walk_tree({}, 0, root) do |suite, level|
@@ -96,7 +93,7 @@ class ExecutionSuite < ActiveRecord::Base
 		end
 		result
 	end
-	
+
 	# TODO: Move to view f.ex. using JBuilder
 	#       (https://github.com/rails/jbuilder).
 	def to_json(context, version = nil, environment = nil)

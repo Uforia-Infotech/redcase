@@ -7,7 +7,7 @@
 	<!-- jstree -->
 	<%=
 		stylesheet_link_tag(
-			'../javascripts/jstree/themes/default/style.min.css',
+			'../redcase/jstree/themes/default/style.min-ca405d9d.css',
 			:plugin => 'redcase'
 		)
 	%>
@@ -19,32 +19,21 @@
 			:plugin => 'redcase'
 		)
 	%>
-	<!-- jQuery UI -->
-	<%=
-		javascript_include_tag(
-			'jquery-ui 1.11.4/jquery-ui.min.js',
-			:plugin => 'redcase'
-		)
-	%>
 	<!-- jstree -->
 	<%= javascript_include_tag 'jstree/jstree.min.js', :plugin => 'redcase' %>
 
 <script type="text/javascript">
 	// NonConflict jQuery
 	var jQuery2 = $.noConflict(true);
-
-	function getIssueUrl(issueId) {
-		return '<%= issue_path('issue_id') %>'.replace('issue_id', issueId);
-	}
 </script>
 
 <!-- Redcase -->
 	<%= javascript_include_tag 'logging', :plugin => 'redcase' %>
 	<%= javascript_include_tag 'api', :plugin => 'redcase' %>
 	<%= javascript_include_tag 'main', :plugin => 'redcase' %>
-	<%= javascript_include_tag 'testSuiteTree', :plugin => 'redcase' %>
-	<%= javascript_include_tag 'executionSuiteTree', :plugin => 'redcase' %>
-	<%= javascript_include_tag 'executionTree', :plugin => 'redcase' %>
+	<%= javascript_include_tag 'TestSuiteTree', :plugin => 'redcase' %>
+	<%= javascript_include_tag 'ExecutionSuiteTree', :plugin => 'redcase' %>
+	<%= javascript_include_tag 'ExecutionTree', :plugin => 'redcase' %>
 	<%= javascript_include_tag 'environments', :plugin => 'redcase' %>
 	<%= javascript_include_tag 'combos', :plugin => 'redcase' %>
 	<%= javascript_include_tag 'chartjs/Chart.min.js', :plugin => 'redcase' %>

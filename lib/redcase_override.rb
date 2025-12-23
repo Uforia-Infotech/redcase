@@ -6,24 +6,23 @@ require File.expand_path("../../app/helpers/redcase_helper", __FILE__)
 module RedcaseOverride
 
   class RO < Redmine::Hook::ViewListener
-  
+
     include RedcaseHelper
 
-    def controller_issues_edit_after_save(context = { })
-      journal_details = JournalDetail.find_by_journal_id(context[:journal])
-      if journal_details.nil? then
-        # ???
-        return
-      end
-      if journal_details.prop_key == 'tracker_id' then
-        if journal_details.value == Tracker.find_by_name('Test case').id.to_s then
-          controller_issues_new_after_save(context)
-        elsif journal_details.old_value == Tracker.find_by_name('Test case').id.to_s then
-          tc = TestCase.find_by_issue_id(context[:issue].id)
-          tc.destroy if !tc.nil?
-        end
-      end
-    end
+   	def controller_issues_edit_after_save(context = { })
+		# context[:journal] may be a Journal or an id; normalize to id
+		jid = context[:journal].respond_to?(:id) ? context[:journal].id : context[:journal]
+		journal_details = JournalDetail.find_by(journal_id: jid)
+		return if journal_details.nil?
+		if journal_details.prop_key == 'tracker_id'
+			if journal_details.value == Tracker.find_by(name: 'Test case').id.to_s
+				controller_issues_new_after_save(context)
+			elsif journal_details.old_value == Tracker.find_by(name: 'Test case').id.to_s
+				tc = TestCase.find_by(issue_id: context[:issue].id)
+				tc.destroy if !tc.nil?
+			end
+		end
+	end
 
     def controller_issues_new_after_save(context = { })
       if context[:issue].tracker.name != "Test case" then

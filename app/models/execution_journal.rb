@@ -7,7 +7,7 @@ class ExecutionJournal < ActiveRecord::Base
 	belongs_to :result, :class_name => 'ExecutionResult'
 	belongs_to :executor, :class_name => 'User'
 	belongs_to :environment, :class_name => 'ExecutionEnvironment'
-	attr_protected :id
+	# attr_protected :id
 
 	# TODO: Move to view f.ex. using JBuilder
 	#       (https://github.com/rails/jbuilder)
@@ -18,15 +18,16 @@ class ExecutionJournal < ActiveRecord::Base
 		'comment'     => comment,
 		'executor'    => (executor.nil? ? '' : executor.name),
 		'environment' => environment.name,
-		'version'     => version.name
+		'version'     => version.name,
+		'report'	  => ''
 	}
 	end
 
 	def self.find_by_issue_id(issue_id)
-		test_case = TestCase.find_by_issue_id(issue_id)
+		test_case = TestCase.find_by(issue_id: issue_id)
 		ExecutionJournal
-			.order('created_on desc')
 			.where({test_case_id: test_case.id})
+			.order(created_on: :desc)
 	end
 
 end

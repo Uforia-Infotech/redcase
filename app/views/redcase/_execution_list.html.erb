@@ -35,7 +35,8 @@
 							'version',
 							options_for_select(
 								Version
-									.where({ project_id: @project.id })
+									.where({ project_id: @project.id ,
+										status: 'open'})
 									.collect { |res| res.name },
 								@version.name
 							)
@@ -62,7 +63,7 @@
 							'environments',
 							options_for_select(
 								ExecutionEnvironment
-									.order('name asc')
+									.order(name: :asc)
 									.where({ project_id: @project.id })
 									.collect { |res| [res.name, res.id] }
 							)

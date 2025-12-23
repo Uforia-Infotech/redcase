@@ -2,19 +2,20 @@
 class Redcase::ExecutionsuitesController < ApplicationController
 
 	unloadable
-	before_filter :find_project, :authorize
+	before_action :find_project, :authorize
 
 	def index
 		if params[:get_results].nil?
-			@list2 = ExecutionSuite.find_by_project_id(@project.id)
+			@list2 = ExecutionSuite.find_by(project_id: @project.id)
 			@version = Version
-				.order('created_on desc')
-				.find_by_project_id(@project.id)
+				.where(project_id: @project.id)
+				.order(created_on: :desc)
+				.first
 			render :partial => 'redcase/execution_list'
 		else
 			@environment = ExecutionEnvironment.find(params[:environment_id])
 			@version = Version.find(params[:version_id])
-			@root_execution_suite = ExecutionSuite.find_by_id(params[:suite_id])
+			@root_execution_suite = ExecutionSuite.find_by(id: params[:suite_id])
 			@results = ExecutionSuite.get_results(
 				@environment,
 				@version,
@@ -27,15 +28,12 @@ class Redcase::ExecutionsuitesController < ApplicationController
 
 	def show
 		unless params[:version].nil?
-			version = Version.find_by_name_and_project_id(
-				params[:version],
-				@project.id
-			)
+			version = Version.find_by(name: params[:version], project_id: @project.id)
 		end
 		unless params[:environment].nil?
-			environment = ExecutionEnvironment.find(params[:environment])	
+			environment = ExecutionEnvironment.find(params[:environment])
 		end
-	
+
 		render :json => ExecutionSuite.find(params[:id]).to_json(
 			view_context, version, environment
 		)

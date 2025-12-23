@@ -1,5 +1,5 @@
-require 'rtf'
+require_relative '../rtf'
 module RTF::Converters
   # Empty, for now
 end
-require 'rtf/converters/html'
+require_relative 'converters/html'

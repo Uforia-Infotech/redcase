@@ -1,10 +1,18 @@
 
 require 'redmine'
-require 'issue_patch'
-require 'project_patch'
-require 'version_patch'
-require 'user_patch'
-require 'redcase_override'
+require 'acts_as_tree'
+require_relative 'lib/issue_patch'
+require_relative 'lib/project_patch'
+require_relative 'lib/version_patch'
+require_relative 'lib/user_patch'
+require_relative 'lib/redcase_override'
+
+# Rails 6+ no longer provides `unloadable`; define a harmless no-op for older plugin code
+unless Kernel.method_defined?(:unloadable)
+  module Kernel
+    def unloadable(*args); end
+  end
+end
 
 Redmine::Plugin.register :redcase do
 
@@ -28,7 +36,8 @@ Redmine::Plugin.register :redcase do
 			:index
 		],
 		'redcase/executionjournals' => [
-			:index
+			:index,
+			:create
 		],
 		'redcase/export' => [
 			:index
@@ -69,7 +78,8 @@ Redmine::Plugin.register :redcase do
 			:copy
 		],
 		'redcase/executionjournals' => [
-			:index
+			:index,
+			:create
 		],
 		'redcase/export' => [
 			:index
@@ -105,7 +115,8 @@ Redmine::Plugin.register :redcase do
 			:update
 		],
 		'redcase/executionjournals' => [
-			:index
+			:index,
+			:create
 		],
 		'redcase/export' => [
 			:index
@@ -130,12 +141,12 @@ Redmine::Plugin.register :redcase do
 			:after => :new_issue
 		}
 
-	Rails.configuration.to_prepare do
+	# Rails.configuration.to_prepare do
 		Issue.send :include, IssuePatch
 		Project.send :include, ProjectPatch
 		Version.send :include, VersionPatch
 		User.send :include, UserPatch
-	end
+	# end
 
 end
 

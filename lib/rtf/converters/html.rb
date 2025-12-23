@@ -1,5 +1,5 @@
 require 'nokogiri'
-require 'tidy'
+# require 'tidy'
 
 module RTF::Converters
   class HTML
@@ -39,8 +39,9 @@ module RTF::Converters
           :char_encoding    => 'utf8'
         }
 
-        tidy = Tidy.new defaults.merge(options)
-        tidy.clean(html)
+        # tidy = Tidy.new defaults.merge(options)
+        # tidy.clean(html)
+        html
       end
 
     module Helpers

@@ -1,12 +1,13 @@
 
+require 'csv'
 class Excel_Exporter
 
 	unloadable
 
 	def self.exportTestResults(project_id, suite_id, version_id, environment_id)
 		issues = Issue
-			.order('id asc')
 			.where({ project_id: project_id })
+			.order(id: :asc)
 			.pluck(:id)
 		test_cases = TestCase.where({ issue_id: issues })
 		versions = Version.find(version_id)
@@ -29,12 +30,9 @@ class Excel_Exporter
 				row << test_case.test_suite.name
 				row << "#{test_case.issue.subject}"
 				found = ExecutionJournal
-					.order('created_on desc')
-					.find_by_test_case_id_and_environment_id_and_version_id(
-						test_case.id,
-						environments.id,
-						versions.id
-					)
+					.where(test_case_id: test_case.id, environment_id: environments.id, version_id: versions.id)
+					.order(created_on: :desc)
+					.first
 				row << (!found ? 'Not Executed' : found.result.name)
 				if found.present?
 					if found.comment.present?
@@ -59,3 +57,7 @@ class Excel_Exporter
 
 end
 
+
+# Zeitwerk (Rails 6+) expects this file to define ExcelExporter.
+# Keep backward compatibility by aliasing the original class name.
+ExcelExporter = Excel_Exporter unless defined?(ExcelExporter)

@@ -9,8 +9,8 @@ class TestCase < ActiveRecord::Base
 		:join_table => 'execution_suite_test_case'
 	)
 	has_many :execution_journals, :dependent => :destroy
-	attr_protected :id
-
+	# attr_protected :id
+  #
 	def copy_to(project)
 		new_issue = Issue.new
 		new_issue.copy_from(issue, :subtasks => false)
@@ -120,10 +120,10 @@ class TestCase < ActiveRecord::Base
 	def to_json(context, version = nil, environment = nil)
 		atext = "#{issue_id}-#{issue.subject}"
 		last_result = get_last_result(version, environment)
-
+				
 		textilized_description =
 			if issue.description
-				context.textilizable(issue, :description, {}) rescue issue.description
+				context.textilizable(issue, :description, {})
 			else
 				''
 			end

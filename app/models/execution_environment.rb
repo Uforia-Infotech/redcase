@@ -9,7 +9,7 @@ class ExecutionEnvironment < ActiveRecord::Base
 		:foreign_key => 'environment_id',
 		:dependent => :destroy
 	)
-	attr_protected :id
+	# attr_protected :id
 
 	def self.get_default_for_project(project)
 		env = ExecutionEnvironment.where({ project_id: project.id }).first
